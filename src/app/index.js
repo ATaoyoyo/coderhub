@@ -4,15 +4,12 @@ const bodyParser = require('koa-bodyparser')
 const app = new Koa()
 
 const errorHandler = require('./errorHandler')
+const useRoutes = require('../router/index')
 
-const userRouter = require('./../router/user.router')
-const authorRouter = require('./../router/author.router')
-
+// 1. 解析参数
 app.use(bodyParser())
-app.use(userRouter.routes())
-app.use(userRouter.allowedMethods())
-app.use(authorRouter.routes())
-app.use(authorRouter.allowedMethods())
+// 2. 引用路由
+useRoutes(app)
 
 app.on('error', errorHandler)
 
