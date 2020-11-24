@@ -1,6 +1,6 @@
 const errorTypes = require('../constants/errorTypes')
 const service = require('../service/user.service')
-const passwordToMd5 = require('../utils/passwordToMd5')
+const md5Password = require('../utils/passwordToMd5')
 
 const verifyUser = async (ctx, next) => {
   const { name, password } = ctx.request.body
@@ -12,7 +12,6 @@ const verifyUser = async (ctx, next) => {
 
   // 判断用户是否已经注册
   const result = await service.getUserByName(name)
-  console.log(result)
   if (result.length) {
     const error = new Error(errorTypes.USER_IS_ALREADY_EXIST)
     return ctx.app.emit('error', error, ctx)
@@ -21,6 +20,13 @@ const verifyUser = async (ctx, next) => {
   await next()
 }
 
+const handlePassword = async (ctx, next) => {
+  const { password } = ctx.request.body
+  ctx.request.body.password = md5Password(password)
+  await next()
+}
+
 module.exports = {
   verifyUser,
+  handlePassword,
 }
