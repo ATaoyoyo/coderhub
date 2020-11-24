@@ -11,6 +11,14 @@ const errorHandler = (error, ctx) => {
       status = 409
       message = '用户名已经存在'
       break
+    case errorTypes.USER_IS_NOT_EXIST:
+      status = 400
+      message = '用户不存在'
+      break
+    case errorTypes.PASSWORD_IS_NOT_RIGHT:
+      status = 400
+      message = '密码错误'
+      break
     default:
       status = 404
       message = 'NOT FOUND'
