@@ -1,5 +1,8 @@
+const jwt = require('jsonwebtoken')
+
 const errorTypes = require('../constants/errorTypes')
 const service = require('../service/user.service')
+const { PUBLIC_KEY } = require('../app/config')
 const md5Password = require('../utils/passwordToMd5')
 
 const verifyLogin = async (ctx, next) => {
@@ -12,7 +15,7 @@ const verifyLogin = async (ctx, next) => {
   // 2. 判断用户名是否存在
   const result = await service.getUserByName(name)
   const user = result[0]
-  console.log(user)
+  ctx.user = user
   if (!user) {
     const error = new Error(errorTypes.USER_IS_NOT_EXIST)
     return ctx.app.emit('error', error, ctx)
@@ -26,6 +29,23 @@ const verifyLogin = async (ctx, next) => {
   await next()
 }
 
+const verifyAuth = (ctx, next) => {
+  const authorization = ctx.header.authorization
+  const token = authorization.replace('Bearer ', '')
+  console.log(token)
+  try {
+    const result = jwt.verify(token, PUBLIC_KEY, { algorithm: ['RS256'] })
+    ctx.user = result
+    ctx.body = '验证成功'
+    next()
+  } catch (err) {
+    console.log(err)
+    const error = new Error(errorTypes.UNAUTHORIZATION)
+    ctx.app.emit('error', error, ctx)
+  }
+}
+
 module.exports = {
   verifyLogin,
+  verifyAuth,
 }
