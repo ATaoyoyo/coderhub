@@ -29,15 +29,18 @@ const verifyLogin = async (ctx, next) => {
   await next()
 }
 
-const verifyAuth = (ctx, next) => {
+const verifyAuth = async (ctx, next) => {
   const authorization = ctx.header.authorization
+  if (!authorization) {
+    const error = new Error(errorTypes.UNAUTHORIZATION)
+    return ctx.app.emit('error', error, ctx)
+  }
   const token = authorization.replace('Bearer ', '')
-  console.log(token)
   try {
     const result = jwt.verify(token, PUBLIC_KEY, { algorithm: ['RS256'] })
     ctx.user = result
-    ctx.body = '验证成功'
-    next()
+    // ctx.body = '验证成功'
+    await next()
   } catch (err) {
     console.log(err)
     const error = new Error(errorTypes.UNAUTHORIZATION)
