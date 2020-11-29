@@ -24,6 +24,19 @@ class CommentController {
       console.log(error)
     }
   }
+
+  // 更新评论
+  async update(ctx, next) {
+    const { commentId } = ctx.params
+    const { content } = ctx.request.body
+    console.log(commentId, content)
+    try {
+      const result = await service.updateComment(commentId, content)
+      ctx.body = result
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 
 module.exports = new CommentController()

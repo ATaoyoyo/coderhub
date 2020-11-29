@@ -21,6 +21,17 @@ class CommentService {
       console.log(error)
     }
   }
+
+  // 更新评论
+  async updateComment(commentId, content) {
+    const statement = `	UPDATE comment SET content = ? WHERE id = ?;`
+    try {
+      const [result] = await database.execute(statement, [content, commentId])
+      return result
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 
 module.exports = new CommentService()
