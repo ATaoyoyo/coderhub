@@ -49,11 +49,14 @@ const verifyAuth = async (ctx, next) => {
   }
 }
 
+// restfull风格 或者 回调函数
 const verifyPermission = async (ctx, next) => {
-  const { id } = ctx.user
+  const { id: userId } = ctx.user
   const { momentId } = ctx.params
+  const [tableName] = Object.keys(ctx.params)
+  const permissionId = ctx.params[tableName]
   try {
-    const result = await authorService.checkPermission(id, momentId)
+    const result = await authorService.resourcePermission(tableName, userId, permissionId)
     if (!result) throw new Error(errorTypes.UNPERMISSION)
     await next()
   } catch (error) {
