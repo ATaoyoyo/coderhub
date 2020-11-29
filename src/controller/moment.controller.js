@@ -22,6 +22,22 @@ class MomentController {
     const result = await service.getMoments(page, size)
     ctx.body = result
   }
+
+  // 修改动态
+  async update(ctx, next) {
+    const { momentId } = ctx.params
+    const { content } = ctx.request.body
+    const result = await service.updateMoment(content, momentId)
+    ctx.body = result
+  }
+
+  // 删除动态
+  async remove(ctx, next) {
+    const { momentId } = ctx.params
+    const result = await service.deleteMoment(momentId)
+    ctx.body = result
+  }
+  
 }
 
 module.exports = new MomentController()

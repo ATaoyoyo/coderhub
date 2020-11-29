@@ -41,6 +41,28 @@ class MonmentService {
     const [result] = await database.execute(statement, [page, size])
     return result
   }
+
+  // 修改动态
+  async updateMoment(content, momentId) {
+    const statement = `UPDATE moment SET content = ? WHERE id = ?;`
+    try {
+      const [result] = await database.execute(statement, [content, momentId])
+      return result
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // 删除动态
+  async deleteMoment(momentId) {
+    const statement = `DELETE FROM moment WHERE id = ?;`
+    try {
+      const [result] = await database.execute(statement, [momentId])
+      return result
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 
 module.exports = new MonmentService()
