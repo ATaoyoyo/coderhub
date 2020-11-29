@@ -32,6 +32,17 @@ class CommentService {
       console.log(error)
     }
   }
+
+  // 删除评论
+  async removeComment(commentId) {
+    const statement = `DELETE FROM comment WHERE id = ?;`
+    try {
+      const [result] = await database.execute(statement, [commentId])
+      return result
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 
 module.exports = new CommentService()

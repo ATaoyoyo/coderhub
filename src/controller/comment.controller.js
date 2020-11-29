@@ -29,9 +29,19 @@ class CommentController {
   async update(ctx, next) {
     const { commentId } = ctx.params
     const { content } = ctx.request.body
-    console.log(commentId, content)
     try {
       const result = await service.updateComment(commentId, content)
+      ctx.body = result
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // 删除评论
+  async remove(ctx, next) {
+    const { commentId } = ctx.params
+    try {
+      const result = await service.removeComment(commentId)
       ctx.body = result
     } catch (error) {
       console.log(error)
